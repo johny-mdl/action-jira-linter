@@ -119,8 +119,7 @@ export class GitHub {
       `;
     }
     return `<p>I'm a bot and I 👍 this PR title. 🤖</p>
-
-    <img src="https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif" width="400" />`;
+<img src="https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif" width="400" />`;
   };
 
   /**
