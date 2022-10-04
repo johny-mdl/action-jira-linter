@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import * as octokit from '@octokit/rest';
+import { getOctokit } from '@actions/github'
 import similarity from 'string-similarity';
 import { CreateIssueCommentParams, PullRequestUpdateParams, UpdateLabelParams } from './types';
 import { BOT_BRANCH_PATTERNS, DEFAULT_BRANCH_PATTERNS, MARKER_REGEX } from './constants';
@@ -10,10 +10,10 @@ export class GitHub {
     hotfixProd: 'HOTFIX-PROD',
   };
 
-  client: octokit.Octokit;
+  client;
 
   constructor(token: string) {
-    this.client = new octokit.Octokit({ auth: token });
+    this.client = getOctokit(token);
 
     if (this.client === undefined || this.client === null) {
       throw new Error('Unable to create GitHub client');
@@ -26,7 +26,7 @@ export class GitHub {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { owner, repo, issue: issue_number, labels } = labelData;
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      await this.client.issues.addLabels({ owner, repo, issue_number, labels });
+      await this.client.rest.issues.addLabels({ owner, repo, issue_number, labels });
     } catch (error) {
       console.error(error);
       // eslint-disable-next-line i18n-text/no-en
@@ -40,7 +40,7 @@ export class GitHub {
     try {
       const { owner, repo, pullRequestNumber, body } = prData;
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      await this.client.pulls.update({ owner, repo, pull_number: pullRequestNumber, body });
+      await this.client.rest.pulls.update({ owner, repo, pull_number: pullRequestNumber, body });
     } catch (error) {
       console.error(error);
       // eslint-disable-next-line i18n-text/no-en
@@ -54,7 +54,7 @@ export class GitHub {
     try {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { owner, repo, issue: issue_number, body } = comment;
-      await this.client.issues.createComment({
+      await this.client.rest.issues.createComment({
         owner,
         repo,
         // eslint-disable-next-line @typescript-eslint/naming-convention
