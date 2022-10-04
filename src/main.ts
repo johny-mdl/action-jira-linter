@@ -146,6 +146,7 @@ async function run(): Promise<void> {
       const typeLabel: string = details?.type?.name || '';
       const labels: string[] = [podLabel, hotfixLabel, typeLabel].filter((l) => l != null && l.length > 0);
       console.log('Adding lables -> ', labels);
+      console.log('POW');
 
       await gh.addLabels({ ...commonPayload, labels });
 
